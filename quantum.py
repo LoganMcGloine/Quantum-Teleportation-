@@ -4,7 +4,7 @@ from qiskit.visualization import plot_bloch_multivector
 from qiskit.quantum_info import Statevector
 import matplotlib.pyplot as plt
 
-#Create a 3-qubit circuit with 3 classical bits
+#Create a 3 qubit circuit with 3 classical bits
 qc = QuantumCircuit(3, 3)
 
 # Ask the user for the state to teleport
@@ -25,17 +25,17 @@ qc.cx(1, 2)   # Entangle qubit 1 and 2 (Bell state)
 
 
 
-# ---At this point, Bob can take his qubit to his disired location---
+# ---At this point Bob can take his qubit to his desired location---
 
 
-#Entangele qubit 0 to 1
+#Entangele qubit 0 to 1 (joining the bell pair)
 qc.cx(0, 1)
 
 #Measure Alice's qubits and store in classical bits
 qc.measure(0, 0)
 qc.measure(1, 1)
 
-#Conditional operations (Bob corrects based on Alice's measurements)
+#Conditional operations (Bob corrects based on Alice measurements)
 with qc.if_test((0, 1)):  # If first classical bit is 1
     qc.x(2)
 with qc.if_test((1, 1)):  # If second classical bit is 1
@@ -48,7 +48,7 @@ qc.measure(2, 2)
 
 # Run the simulation with 10000 shots
 sim = Aer.get_backend('aer_simulator')
-qc = qc.reverse_bits()  # Qiskit uses little-endian for measurement so we reverse the bits
+qc = qc.reverse_bits()  # Qiskit uses little endian for measurement so reverse the bits
 job = sim.run(qc, shots=10000) 
 result = job.result()
 counts = result.get_counts()
@@ -66,7 +66,7 @@ for outcome, count in sorted(counts.items()):
     print(f"{outcome}: {count} times ({percentage:.1f}%)")
    
 
-# Extract just the results for Bob's qubit (qubit 2)
+# Extract just the results for qubit 2 (Bob)
 bob_counts = {'0': 0, '1': 0}
 for outcome, count in counts.items():
     bob_bit = outcome[0]  # Rightmost bit is Bob's qubit
